@@ -13,11 +13,11 @@ const UserSchema = new mongoose.Schema({
     password:{
         type: String,
         required:true,
-        
-    },Phone_number:{
-        type:Number,
-        required:true,
-    }
+    }  
+    // },Phone_number:{
+    //     type:Number,
+    //     required:true,
+    // }
 })
 
 const User = mongoose.model("User",UserSchema);
