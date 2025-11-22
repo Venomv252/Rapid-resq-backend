@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-router.post("/signup",async (req,res)=>{
+router.post("api/signup",async (req,res)=>{
     try{
         const {name,email,password} = req.body;
         const exist = await User.findOne({email});
@@ -32,7 +32,7 @@ router.post("/login",async(req,res)=>{
         if(!exist){
             return res.status(400).json({message:"User doesn't exist "});
         }else{
-            
+
             
         }
     }catch(e){
