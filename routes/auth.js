@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
-router.post("api/signup",async (req,res)=>{
+router.post("/signup",async (req,res)=>{
     try{
         const {name,email,password} = req.body;
         const exist = await User.findOne({email});
@@ -14,7 +14,7 @@ router.post("api/signup",async (req,res)=>{
                 name,
                 email,
                 password,
-                Phone_number
+                
             });
            await newUser.save();
            res.status(200).json({message:"User Saved Successfully"})
@@ -28,7 +28,7 @@ router.post("api/signup",async (req,res)=>{
 router.post("/login",async(req,res)=>{
     try{
         const {name,email,password} = req.body;
-        const exist = await User.findOne({email,Phone_number});
+        const exist = await User.findOne({email});
         if(!exist){
             return res.status(400).json({message:"User doesn't exist "});
         }else{
