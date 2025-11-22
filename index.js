@@ -10,7 +10,7 @@ const port = 5000;
 
 app.use(
   cors({
-    origin: "https://rapid-resq-frontend-ecdb.vercel.app/",
+    origin: "https://rapid-resq-frontend-ecdb.vercel.app",
   })
 );
 
