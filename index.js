@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
 import router from "./routes/auth.js";
+import Sensordata_route from "./routes/sensor-data.js";
 
 
 dotenv.config();
@@ -12,7 +13,12 @@ const port = 5000;
 
 app.use(
   cors({
-    origin: "https://rapid-resq-frontend-ecdb.vercel.app",
+    origin: ["https://rapid-res-frontend-00.vercel.app/",
+              "https://localhost:3000",
+              "http://localhost:5173"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"]
   })
 );
 
@@ -28,7 +34,13 @@ const connectdb  = async () =>{
 }
 connectdb();
 
+
+//signup route
 app.use("/api",router);
+
+//sensor data route
+app.use("/api",Sensordata_route);
+
 
 
 app.listen(port, () => {
