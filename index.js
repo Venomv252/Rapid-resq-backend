@@ -13,8 +13,8 @@ const port = 5000;
 
 app.use(
   cors({
-    origin: ["https://rapid-res-frontend-00.vercel.app/",
-              "https://localhost:3000",
+    origin: ["https://rapid-res-frontend-00.vercel.app",
+              "http://localhost:3000",
               "http://localhost:5173"
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],

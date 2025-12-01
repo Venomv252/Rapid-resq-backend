@@ -1,15 +1,27 @@
-import express  from 'express';
-const router = express.Router();
+import express from "express";
+import SensorReading from "../models/SensorReading.js";
 
-router.post('/sensor-data',(req, res) => {
-    try{
-        app.post('/sensor-data',(req, res) => {
-            res.status(200).json({message:"sensor data recieved"})
-            console.log(req.body)
-        })
-    }catch(error){
-        res.status(500).json({message:"Error in recieving sensor data"})
-    }
+const Sensordata_route = express.Router();
+
+Sensordata_route.post("/sensor-data", async (req, res) => {
+  try {
+    const { longitude, latitude, altitude, gMean } = req.body;
+
+    const reading = await SensorReading.create({
+      longitude,
+      latitude,
+      altitude,
+      gMean,
+    });
+
+    res.status(201).json({
+      message: "Sensor data saved",
+      data: reading,
+    });
+  } catch (err) {
+    console.error("Error saving sensor data:", err);
+    res.status(500).json({ message: "Error saving sensor data" });
+  }
 });
 
-export default router;
+export default Sensordata_route;
