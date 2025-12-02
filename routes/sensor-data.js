@@ -18,6 +18,7 @@ Sensordata_route.post("/sensor-data", async (req, res) => {
       message: "Sensor data saved",
       data: reading,
     });
+    console.log(reading);
   } catch (err) {
     console.error("Error saving sensor data:", err);
     res.status(500).json({ message: "Error saving sensor data" });
