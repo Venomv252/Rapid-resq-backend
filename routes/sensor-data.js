@@ -1,7 +1,7 @@
 import express from "express";
 import SensorReading from "../models/SensorReading.js";
 import User from "../models/User.js";
-import whatsappService from "..whatsapp/whatsappService.js";
+import whatsappService from "../whatsapp/whatsappService.js";   // ✅ FIXED PATH
 
 const Sensordata_route = express.Router();
 
@@ -20,7 +20,7 @@ Sensordata_route.post("/sensor-data", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 1️⃣ Save reading in DB
+    // Save reading in DB
     const reading = await SensorReading.create({
       userId,
       longitude,
@@ -29,7 +29,7 @@ Sensordata_route.post("/sensor-data", async (req, res) => {
       gMean,
     });
 
-    // 2️⃣ Check threshold
+    // Check threshold
     let alertSent = false;
 
     if (gMean > user.threshold) {
@@ -47,7 +47,7 @@ Location: ${latitude}, ${longitude}`;
       }
     }
 
-    // 3️⃣ Respond to frontend / sensor
+    // Response
     res.status(201).json({
       message: "Sensor data saved",
       alertSent,
