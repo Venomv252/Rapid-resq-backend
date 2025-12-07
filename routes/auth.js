@@ -10,15 +10,21 @@ router.post("/signup", async (req, res) => {
   try {
     const { name, email, password, phoneNumber, threshold } = req.body;
 
-    // Validation
+    // Validate input fields
     if (!name || !email || !password || !phoneNumber) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // Check if user exists
+    // Check if email already exists
     const exist = await User.findOne({ email });
     if (exist) {
       return res.status(400).json({ message: "User already exists" });
+    }
+
+    // OPTIONAL: Check if phone number already exists
+    const phoneExist = await User.findOne({ phoneNumber });
+    if (phoneExist) {
+      return res.status(400).json({ message: "Phone number already registered" });
     }
 
     // Hash password
@@ -30,12 +36,12 @@ router.post("/signup", async (req, res) => {
       email,
       password: hashedPassword,
       phoneNumber,
-      threshold: threshold || 10
+      threshold: Number(threshold) || 10   // ensure numeric threshold
     });
 
     await newUser.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "User registered successfully",
       user: {
         id: newUser._id,
@@ -47,7 +53,7 @@ router.post("/signup", async (req, res) => {
     });
 
   } catch (e) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Error saving user",
       error: e.message
     });
@@ -62,24 +68,24 @@ router.post("/login", async (req, res) => {
 
     // Validation
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password required" });
+      return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // Check user
+    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "User does not exist" });
     }
 
-    // Compare password using bcrypt
+    // Verify password
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return res.status(400).json({ message: "Incorrect password" });
     }
 
-    // Success
-    res.status(200).json({
+    // Successful login
+    return res.status(200).json({
       message: "Login successful",
       user: {
         id: user._id,
@@ -91,7 +97,7 @@ router.post("/login", async (req, res) => {
     });
 
   } catch (e) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "Login error",
       error: e.message
     });
