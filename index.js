@@ -5,7 +5,9 @@ import cors from "cors";
 
 import authRoutes from "./routes/auth.js";
 import sensorDataRoutes from "./routes/sensor-data.js";
-import whatsappService from "./whatsappService.js";   // ⭐ ADD THIS
+
+// ✅ Correct WhatsApp import (matches your folder structure)
+import whatsappService from "./whatsapp/whatsappService.js";
 
 dotenv.config();
 
@@ -27,7 +29,6 @@ app.use(
 
 app.use(express.json());
 
-
 // --------------------- DATABASE CONNECTION ---------------------
 const connectDB = async () => {
   try {
@@ -42,18 +43,19 @@ const connectDB = async () => {
 
 connectDB();
 
-
 // --------------------- WHATSAPP SERVICE INIT ---------------------
 (async () => {
-  console.log("📲 Starting WhatsApp service...");
-  await whatsappService.initialize();   // ⭐ IMPORTANT
+  try {
+    console.log("📲 Starting WhatsApp service...");
+    await whatsappService.initialize();   // ⭐ IMPORTANT
+  } catch (err) {
+    console.error("❌ Error initializing WhatsApp service:", err);
+  }
 })();
-
 
 // --------------------- ROUTES ---------------------
 app.use("/api", authRoutes);
 app.use("/api", sensorDataRoutes);
-
 
 // --------------------- START SERVER ---------------------
 app.listen(port, () => {
