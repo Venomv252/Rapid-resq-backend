@@ -1,7 +1,7 @@
 import express from "express";
 import SensorReading from "../models/SensorReading.js";
 import User from "../models/User.js";
-import whatsappService from "../whatsapp/whatsappService.js";   // ✅ FIXED PATH
+import whatsappService from "../whatsapp/whatsappService.js";  // ✅ FIXED PATH
 
 const Sensordata_route = express.Router();
 
