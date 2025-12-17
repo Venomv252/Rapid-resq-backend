@@ -59,14 +59,14 @@ connectDB();
    WHATSAPP SERVICE INIT
 ======================= */
 
-(async () => {
-  try {
-    console.log("📲 Starting WhatsApp service...");
-    await whatsappService.initialize();
-  } catch (err) {
-    console.error("❌ Error initializing WhatsApp service:", err);
-  }
-})();
+// (async () => {
+//   try {
+//     console.log("📲 Starting WhatsApp service...");
+//     await whatsappService.initialize();
+//   } catch (err) {
+//     console.error("❌ Error initializing WhatsApp service:", err);
+//   }
+// })();
 
 /* =======================
    ROUTES
