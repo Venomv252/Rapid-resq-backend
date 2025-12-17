@@ -1,14 +1,25 @@
-import express from 'express';
-import bcrypt from 'bcrypt';
-import User from '../models/User.js';
+import express from "express";
+import bcrypt from "bcrypt";
+import User from "../models/User.js";
 
 const router = express.Router();
 
+/* =======================
+   PREFLIGHT HANDLER (CRITICAL)
+======================= */
 
-// ------------------ SIGNUP ------------------
+// ✅ THIS FIXES CORS PERMANENTLY
+router.options("*", (req, res) => {
+  res.sendStatus(200);
+});
+
+/* =======================
+   SIGNUP
+======================= */
+
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password, phoneNumber} = req.body;
+    const { name, email, password, phoneNumber } = req.body;
 
     // Validate input fields
     if (!name || !email || !password || !phoneNumber) {
@@ -21,7 +32,7 @@ router.post("/signup", async (req, res) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // OPTIONAL: Check if phone number already exists
+    // Check if phone number already exists
     const phoneExist = await User.findOne({ phoneNumber });
     if (phoneExist) {
       return res.status(400).json({ message: "Phone number already registered" });
@@ -36,7 +47,6 @@ router.post("/signup", async (req, res) => {
       email,
       password: hashedPassword,
       phoneNumber,
-      
     });
 
     await newUser.save();
@@ -48,20 +58,20 @@ router.post("/signup", async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         phoneNumber: newUser.phoneNumber,
-        
-      }
+      },
     });
-
   } catch (e) {
     return res.status(500).json({
       message: "Error saving user",
-      error: e.message
+      error: e.message,
     });
   }
 });
 
+/* =======================
+   LOGIN
+======================= */
 
-// ------------------ LOGIN ------------------
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -79,12 +89,10 @@ router.post("/login", async (req, res) => {
 
     // Verify password
     const passwordMatch = await bcrypt.compare(password, user.password);
-
     if (!passwordMatch) {
       return res.status(400).json({ message: "Incorrect password" });
     }
 
-    // Successful login
     return res.status(200).json({
       message: "Login successful",
       user: {
@@ -92,17 +100,14 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
-        
-      }
+      },
     });
-
   } catch (e) {
     return res.status(500).json({
       message: "Login error",
-      error: e.message
+      error: e.message,
     });
   }
 });
-
 
 export default router;
