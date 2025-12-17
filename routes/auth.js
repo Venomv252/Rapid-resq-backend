@@ -8,7 +8,7 @@ const router = express.Router();
 // ------------------ SIGNUP ------------------
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password, phoneNumber, threshold } = req.body;
+    const { name, email, password, phoneNumber} = req.body;
 
     // Validate input fields
     if (!name || !email || !password || !phoneNumber) {
@@ -36,7 +36,7 @@ router.post("/signup", async (req, res) => {
       email,
       password: hashedPassword,
       phoneNumber,
-      threshold: Number(threshold) || 10   // ensure numeric threshold
+      
     });
 
     await newUser.save();
@@ -48,7 +48,7 @@ router.post("/signup", async (req, res) => {
         name: newUser.name,
         email: newUser.email,
         phoneNumber: newUser.phoneNumber,
-        threshold: newUser.threshold
+        
       }
     });
 
@@ -92,7 +92,7 @@ router.post("/login", async (req, res) => {
         name: user.name,
         email: user.email,
         phoneNumber: user.phoneNumber,
-        threshold: user.threshold
+        
       }
     });
 

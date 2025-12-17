@@ -22,17 +22,6 @@ const UserSchema = new mongoose.Schema({
         required: true,   // Needed for WhatsApp alerts
     },
 
-    threshold: {
-        type: Number,
-        default: 10,      // Default threshold if users don’t set it
-    },
-
-    sensors: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Sensor",  // If you create a Sensor model
-        }
-    ],
 
 }, { timestamps: true });
 
