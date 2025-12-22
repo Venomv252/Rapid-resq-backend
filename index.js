@@ -5,9 +5,7 @@ import cors from "cors";
 
 import authRoutes from "./routes/auth.js";
 import sensorDataRoutes from "./routes/sensor-data.js";
-
-// WhatsApp service
-import whatsappService from "./whatsapp/whatsappService.js";
+// import whatsappService from "./whatsapp/whatsappService.js";
 
 dotenv.config();
 
@@ -18,58 +16,18 @@ const port = process.env.PORT || 5000;
    GLOBAL MIDDLEWARE
 ======================= */
 
-// ✅ CORS — MUST be before routes
+// ✅ CORS — SINGLE ORIGIN ONLY
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      
-      const allowedOrigins = "https://rapid-res-frontend.vercel.app";
-      
-      // if (allowedOrigins.indexOf(origin) !== -1) {
-      //   callback(null, true);
-      // } else {
-      //   console.log(`CORS blocked origin: ${origin}`);
-      //   callback(new Error('Not allowed by CORS'));
-      // }
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "https://rapid-res-frontend.vercel.app",
     credentials: true,
-    // optionsSuccessStatus: 200
   })
 );
 
-// Additional CORS headers for preflight requests
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  const allowedOrigins = [
-    "https://rapid-res-frontend-00.vercel.app",
-    "https://rapid-res-frontend.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:5173",
-  ];
-  
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-});
+// ✅ Handle preflight
 
 
-
-
-// Body parser
+// ✅ Body parser (MUST be before routes)
 app.use(express.json());
 
 /* =======================
@@ -91,19 +49,6 @@ const connectDB = async () => {
 connectDB();
 
 /* =======================
-   WHATSAPP SERVICE INIT
-======================= */
-
-// (async () => {
-//   try {
-//     console.log("📲 Starting WhatsApp service...");
-//     await whatsappService.initialize();
-//   } catch (err) {
-//     console.error("❌ Error initializing WhatsApp service:", err);
-//   }
-// })();
-
-/* =======================
    ROUTES
 ======================= */
 
@@ -111,7 +56,7 @@ app.use("/api", authRoutes);
 app.use("/api", sensorDataRoutes);
 
 /* =======================
-   HEALTH CHECK (OPTIONAL)
+   HEALTH CHECK
 ======================= */
 
 app.get("/", (req, res) => {
