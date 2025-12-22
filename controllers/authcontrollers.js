@@ -2,15 +2,15 @@ import  User from '../models/User.js';
 
 const signup = async (req, res) => {
     try {
-        const {name, email,password} = req.body;
+        const {name, email, password, phoneNumber} = req.body;
         const exist = await User.findOne({email});
-        if (exist) return res.status(400).json({message:"User already exist "});
+        if (exist) return res.status(400).json({message:"User already exists"});
 
         const newUser = new User({
             email,
             name,
             password,
-            phone_number,
+            phoneNumber,
         });
 
         await newUser.save();
@@ -22,17 +22,27 @@ const signup = async (req, res) => {
     }
 };      
 
-const Login  = async (req,res) =>{
-
-    try{
-        const exist  = await User.findOne({email,Phone_number});
-        if(!exist){
-            return res.status(400).json({message:"user does not exist" })
-            console.log("User does not exist");
+const Login = async (req, res) => {
+    try {
+        const {email, password} = req.body;
+        const exist = await User.findOne({email});
+        if (!exist) {
+            return res.status(400).json({message:"User does not exist"});
         }
-
-    }catch(error){
-        res.status(500).json({message:"Login erorr",error:e.message})
+        
+        // Add password verification logic here
+        // const passwordMatch = await bcrypt.compare(password, exist.password);
+        // if (!passwordMatch) {
+        //     return res.status(400).json({message:"Incorrect password"});
+        // }
+        
+        res.status(200).json({message:"Login successful", user: exist});
+        console.log("Login successful");
+        
+    } catch (error) {
+        res.status(500).json({message:"Login error", error: error.message});
         console.log("Login error");
     }
 }
+
+export { signup, Login };
