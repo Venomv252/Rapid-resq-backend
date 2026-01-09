@@ -10,11 +10,12 @@ dotenv.config();
 const CreateAdmin = async () => {
   try {
     connectDB();
+    await Admin.deleteMany();
     const hashedPassword = await bcrypt.hash("Admin@123", 10);
 
     await Admin.create({
       name: "Admin",
-      email: "hrsht02@gmail.com",
+      email: "hrsht002@gmail.com",
       password: hashedPassword,
     });
 
